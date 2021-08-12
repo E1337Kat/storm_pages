@@ -1,0 +1,35 @@
+body {
+  padding: 20px;
+  font-family: Helvetica;
+  color: #f2f2f2;
+  background-color: #3a3a3a;
+}
+
+.main-content {
+  float: left;
+  margin-left: 10%;
+  margin-right: 20%;
+}
+
+.signature {
+  text-align: left;
+  font-family: 'Sofia';
+  font-size: 20px;
+  padding-bottom: 20px;
+  color: #c7b5f2;
+}
+
+ul {
+  display: block;
+  margin: 10px;
+}
+
+li {
+  background-color: #f2f2f2;
+  color: #3a3a3a;
+  border-radius: 3px;
+  padding: 20px;
+  margin: 5px;
+  font-size: 14px;
+  width: 50%;
+}
