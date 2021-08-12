@@ -35,11 +35,15 @@ window.change_lang = function() {
   translate();
 }
 
+window.onload = function() {
+  translate();
+};
+
 function translate() {
   $("[data-translate]").each(function() {
     var key = $(this).data('translate');
     $(this).html(dictionary[key][current_lang] || "N/A");
   });
-}
+};
 
 translate();
