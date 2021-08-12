@@ -18,6 +18,11 @@ var dictionary = {
     'ca': 'Ellie Peterson',
     'en': 'Ellie Peterson',
     'jp': 'えーリ・ペーターソン',
+  },
+  'current-lang': {
+    'ca': 'Català',
+    'en': 'English',
+    'jp': '日本語',
   }
 };
 var langs = ['ca', 'en', 'jp'];
