@@ -42,3 +42,9 @@ li {
   font-size: 14px;
   width: 50%;
 }
+
+@media only screen and (max-width: 500px) {
+  .footer {
+    position: unset;
+  }
+}
