@@ -43,12 +43,23 @@ li {
   width: 50%;
 }
 
-.storm-images > img.cat-face {
-  max-width: 500px;
+.storm-images {
+  text-align: center;
 }
 
-.storm-images > img.cat-ball {
-  max-width: 500px;
+.storm-images img {
+  max-width: 250px;
+}
+
+.storm-face {
+  float:left
+}
+
+.storm-ball {
+  float: right;
+}
+.storm-ball > p {
+  font-style: italic;
 }
 
 @media only screen and (max-width: 500px) {
