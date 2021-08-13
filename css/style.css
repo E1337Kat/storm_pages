@@ -43,6 +43,14 @@ li {
   width: 50%;
 }
 
+.storm-images > img.cat-face {
+  max-width: 500px;
+}
+
+.storm-images > img.cat-ball {
+  max-width: 500px;
+}
+
 @media only screen and (max-width: 500px) {
   .footer {
     position: unset;

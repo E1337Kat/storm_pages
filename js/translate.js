@@ -19,6 +19,16 @@ var dictionary = {
     'en': 'Ellie Peterson',
     'jp': 'えーリ・ペーターソン',
   },
+  'nyaa': {
+    'ca': 'meuuu',
+    'en': 'meowww',
+    'jp': 'ニャアア',
+  },
+  'purr': {
+    'ca': 'grrr grrr grrr grrr',
+    'en': 'grrr grrr grrr grrr',
+    'jp': 'ゴロゴロゴロゴロ',
+  },
   'current-lang': {
     'ca': 'Català',
     'en': 'English',
