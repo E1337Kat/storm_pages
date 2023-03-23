@@ -1,7 +1,6 @@
 module Router.Routes exposing
     ( Page(..)
     , routes
-    -- , toPath
     )
 
 {-| Route web requests to particular pages.
@@ -36,15 +35,3 @@ routes =
         [ map Home top
         , map NotFound (s "404")
         ]
-
-
-
--- {-| Transform a page to a string page.
--- -}
--- toPath : Page -> String
--- toPath page =
---     case page of
---         Home ->
---             "/"
---         NotFound ->
---             "/404"

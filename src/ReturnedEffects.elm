@@ -10,12 +10,6 @@ module ReturnedEffects exposing
     , singleton
     , none
     , build
-    -- , return
-    -- , mapWith
-    -- , maybeEffects
-    -- , andThen
-    -- , addEffectIf
-    -- , subModuleUpdate
     )
 
 {-| Helper functionality for effects, analogous to elm-return's types and functions.
@@ -40,9 +34,6 @@ module ReturnedEffects exposing
 @docs build
 
 -}
-
--- import Ellie.Util exposing (condMap)
--- import Maybe.Extra exposing (unwrap)
 
 
 {-| List of effects
@@ -119,59 +110,11 @@ batch (Effects oneListOfEffects) (Effects anotherListOfEffects) =
     Effects (List.append oneListOfEffects anotherListOfEffects)
 
 
-
--- {-| Apply a function to the model and possibly add an effect.
--- In other words, first parameter is a function that takes a
--- model and returns a tuple of ( model, effect )
--- -}
--- andThen : (a -> Return (Effects c) b) -> Return (Effects c) a -> Return (Effects c) b
--- andThen f ( model, effects ) =
---     let
---         ( updatedModel, newEffect ) =
---             model |> f
---     in
---     ( updatedModel, batch effects newEffect )
--- {-| Create a Return from model and effects, analogous to Return's return.
--- -}
--- return : model -> Effects a -> Return (Effects a) model
--- return model (Effects effects) =
---     ( model, Effects effects )
-
-
 {-| Add an effects to a return, and the model is not affected.
 -}
 addEffect : Effects e -> Return (Effects e) model -> Return (Effects e) model
 addEffect effectToAdd ( model, theEffect ) =
     ( model, batch theEffect effectToAdd )
-
-
-
--- {-| Add an effects to a return, but the model is not affected if a condition is meet.
--- -}
--- addEffectIf : Bool -> Effects e -> Return (Effects e) model -> Return (Effects e) model
--- addEffectIf bool effectToAdd =
---     condMap
---         bool
---         (\() -> addEffect effectToAdd)
--- {-| A general function for updating effects from sub-modules.
--- -}
--- subModuleUpdate :
---     subModuleMsgParameter
---     -> (subModuleEffect -> e)
---     -> subModuleModelType
---     -> (Maybe subModuleMsgType -> subModuleModelType -> Return (Effects subModuleEffect) subModuleModelType)
---     -> (subModuleModelType -> modelType -> modelType)
---     -> (subModuleMsgParameter -> subModuleMsgType)
---     -> Return (Effects e) modelType
---     -> Return (Effects e) modelType
--- subModuleUpdate subModuleMsg subModuleEffectMapper subModuleModel subModuleUpdateFunction updateModelWithSubModuleModel typeConstructor return_ =
---     let
---         ( updatedSubModuleModel, updatedSubModuleEffect ) =
---             subModuleUpdateFunction (Just (typeConstructor subModuleMsg)) subModuleModel
---     in
---     return_
---         |> map (updateModelWithSubModuleModel updatedSubModuleModel)
---         |> addEffect (listMap subModuleEffectMapper updatedSubModuleEffect)
 
 
 {-| Transform the Model of a Returned effects; the effects will be left untouched.
@@ -180,19 +123,6 @@ map : (a -> b) -> Return effects a -> Return effects b
 map f theTuple =
     theTuple
         |> Tuple.mapFirst f
-
-
-
--- {-| Transform the Model of and add a new effects to the queue
--- -}
--- mapWith : (a -> b) -> Effects c -> Return (Effects c) a -> Return (Effects c) b
--- mapWith f newEffect ( model, existingEffect ) =
---     ( model |> f, batch existingEffect newEffect )
--- {-| If the given item is something, call the function mapping it to an effect. Otherwise, return no effects.
--- -}
--- maybeEffects : (a -> Effects b) -> Maybe a -> Effects b
--- maybeEffects f =
---     unwrap none f
 
 
 {-| A null set of effects, so no effects.

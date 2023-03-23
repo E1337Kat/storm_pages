@@ -40,12 +40,8 @@ view requestedLang currentPage _ =
         [ div
             [ Attr.class "main-content"
             ]
-            [ h1
-                []
-                [ text (translate requestedLang currentPage "greet") ]
-            , p
-                []
-                [ text (translate requestedLang currentPage "bio") ]
+            [ h1 [] [ text (translate requestedLang currentPage "greet") ]
+            , p [] [ text (translate requestedLang currentPage "bio") ]
             , p
                 [ Attr.class "salutations" ]
                 [ text (translate requestedLang currentPage "salutations") ]
@@ -61,29 +57,23 @@ view requestedLang currentPage _ =
                     ]
                 , li []
                     [ a
-                        [ Attr.href "https://github.com/e1337kat"
-                        ]
+                        [ Attr.href "https://github.com/e1337kat" ]
                         [ text "My dope github" ]
                     ]
                 ]
             , div
                 [ Attr.class "storm-images"
                 ]
-                [ h3 []
-                    [ text "Storm:" ]
-                , br []
-                    []
+                [ h3 [] [ text "Storm:" ]
+                , br [] []
                 , div
-                    [ Attr.class "storm-face"
-                    ]
+                    [ Attr.class "storm-face" ]
                     [ img
                         [ Attr.src "nyaasets/strom_face.png"
                         , Attr.title "Cute stupid face."
                         ]
                         []
-                    , p
-                        []
-                        [ text (translate requestedLang currentPage "nyaa") ]
+                    , p [] [ text (translate requestedLang currentPage "nyaa") ]
                     ]
                 , div
                     [ Attr.class "storm-ball"
@@ -93,18 +83,13 @@ view requestedLang currentPage _ =
                         , Attr.title "Cute ball animal."
                         ]
                         []
-                    , p
-                        []
-                        [ text (translate requestedLang currentPage "purr") ]
+                    , p [] [ text (translate requestedLang currentPage "purr") ]
                     ]
                 ]
             ]
         , div [ Attr.class "footer" ]
-            [ p []
-                [ text "Pick a language. Current Language:" ]
-            , p
-                []
-                [ text (translate requestedLang currentPage "currentLang") ]
+            [ p [] [ text "Pick a language. Current Language:" ]
+            , p [] [ text (translate requestedLang currentPage "currentLang") ]
             , button
                 [ onClick ClickedChangeLanguageButton ]
                 [ text "Change Language" ]

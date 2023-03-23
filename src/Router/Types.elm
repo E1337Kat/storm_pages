@@ -49,16 +49,8 @@ type Effect
     = DirectCommand (Cmd Msg)
 
 
-
--- | GoToPagePath String
-
-
 {-| Router message events.
 -}
 type Msg
     = UrlChanged Url
     | UrlRequested UrlRequest
-
-
-
--- | Go Page

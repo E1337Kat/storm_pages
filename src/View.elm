@@ -9,11 +9,6 @@ module View exposing (view)
 
 -}
 
--- import Html.Attributes.Extra exposing (empty)
--- import Html.Extra exposing (nothing)
--- import Maybe exposing (andThen)
--- import Maybe.Extra exposing (isJust, values)
-
 import About.View
 import Browser
 import Html
@@ -55,6 +50,5 @@ renderRoute ({ router } as model) =
         Home ->
             map MsgForAbout (About.View.view model.currentLang router.page model.about)
 
-        -- Html.h1 [] [ text "About Me" ]
         _ ->
             Html.h1 [] [ text "404 not found" ]
