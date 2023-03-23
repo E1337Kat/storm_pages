@@ -21,22 +21,13 @@ module Update exposing
 
 -}
 
--- import Graphql.Document
--- import Graphql.Http
--- import Graphql.Operation exposing (RootMutation, RootQuery)
--- import Graphql.SelectionSet exposing (SelectionSet)
--- import Json.Decode as Decode
--- import Json.Encode as Encode
--- import OpaqueDict
--- import Pagination exposing (PageNumber, SortOrder, pageFromCurrentPage, withDefaultPageOfNumber)
--- import Maybe exposing (withDefault)
--- import Maybe.Extra exposing (isJust, isNothing, unwrap)
--- import RemoteData exposing (RemoteData(..), WebData)
-
+import About.Types
 import About.Update
 import Browser.Events exposing (onKeyDown)
 import Browser.Navigation exposing (Key)
 import Ellie.Util exposing (msgToCmd)
+import I18n.I18n exposing (defaultLanguage)
+import I18n.Types exposing (LanguageId(..))
 import KeyboardEvent.Types exposing (Msg(..), keyDecoder)
 import ReturnedEffects
     exposing
@@ -70,12 +61,7 @@ import Url exposing (Url)
 -}
 init : Url -> (navigationKey -> ReturnWithEffects navigationKey)
 init url key =
-    -- let
-    --     nextUUID : UUIDWithSeeds
-    --     nextUUID =
-    --         UUID.next appointmentUUID
-    -- in
-    singleton (Model key Nothing True (Just ""))
+    singleton (Model key Nothing defaultLanguage True (Just ""))
         |> andMapEffect EffectFromRouter (Router.Update.init url key)
         |> andMapEffect EffectFromAbout About.Update.init
         |> addEffect
@@ -163,7 +149,7 @@ maybeActOnPageRequest (( model, msg ) as return) =
         updatedEffects : ReturnWithEffects navigationKey
         updatedEffects =
             case model.router.page of
-                About ->
+                Home ->
                     ( model
                     , [ msg ]
                         |> foldl
@@ -194,6 +180,26 @@ maybeActOnUpdatedState originalMsg (( model, msg ) as return) =
             , msg
             )
 
+        MsgForAbout About.Types.ClickedChangeLanguageButton ->
+            let
+                nextLang : LanguageId
+                nextLang =
+                    case model.currentLang of
+                        LanguageId "ca" ->
+                            LanguageId "en"
+
+                        LanguageId "en" ->
+                            LanguageId "jp"
+
+                        LanguageId "jp" ->
+                            LanguageId "ca"
+
+                        _ ->
+                            LanguageId "en"
+            in
+            return
+                |> map (\m -> { m | currentLang = nextLang })
+
         -- All we care about for page requests are route changes, so will act only when the original message is for the router and the URL actually changed.
         MsgForRouter (Router.Types.UrlChanged _) ->
             maybeActOnPageRequest return
@@ -204,17 +210,6 @@ maybeActOnUpdatedState originalMsg (( model, msg ) as return) =
 
         _ ->
             return
-
-
-
--- {-| Create an effect to send a toast message.
--- -}
--- sendToast : Toast -> String -> Effects Effect
--- sendToast toast uuidToUse =
---     toast
---         |> ToastType.withId uuidToUse
---         |> (ToastType.ToastEnqueued >> ToastType.MessageEffect >> build)
---         |> listMap EffectFromToasts
 
 
 {-| Translate a message to its specific sub-module.

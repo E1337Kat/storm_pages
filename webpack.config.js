@@ -18,8 +18,8 @@ const config = (isDev) => ({
   entry: "./src/index.ts",
   output: {
     path: path.resolve(__dirname, "build"),
-    filename: `${prefix}-[name].js`,
-    publicPath: "/",
+    filename: `nyaasets/${prefix}-[name].js`,
+    publicPath: "",
   },
   devServer: {
     host: "0.0.0.0",
@@ -74,7 +74,7 @@ const config = (isDev) => ({
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: `${prefix}-style.css`,
+      filename: `nyaasets/${prefix}-style.css`,
       chunkFilename: `[name].css`,
     }),
     new HtmlWebpackPlugin({
@@ -86,7 +86,7 @@ const config = (isDev) => ({
       patterns: [
         {
           from: "public/**/*",
-          to: `${prefix}-[name][ext]`,
+          to: `nyaasets/${prefix}-[name][ext]`,
           toType: "template",
         },
       ],

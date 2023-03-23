@@ -18,32 +18,29 @@ import Html
         )
 import Html.Attributes as Attr
 import Html.Events exposing (onClick)
+import I18n.I18n exposing (translate)
+import I18n.Types exposing (LanguageId)
+import Router.Routes exposing (Page)
 
 
-view : Model -> Html Msg
-view _ =
+view : LanguageId -> Page -> Model -> Html Msg
+view requestedLang currentPage _ =
     div []
         [ div
             [ Attr.class "main-content"
             ]
             [ h1
-                [ Attr.attribute "data-translate" "greet"
-                ]
                 []
+                [ text (translate requestedLang currentPage "greet") ]
             , p
-                [ Attr.attribute "data-translate" "bio"
-                ]
                 []
+                [ text (translate requestedLang currentPage "bio") ]
             , p
-                [ Attr.class "salutations"
-                , Attr.attribute "data-translate" "salutations"
-                ]
-                []
+                [ Attr.class "salutations" ]
+                [ text (translate requestedLang currentPage "salutations") ]
             , p
-                [ Attr.class "signature"
-                , Attr.attribute "data-translate" "signature"
-                ]
-                []
+                [ Attr.class "signature" ]
+                [ text (translate requestedLang currentPage "signature") ]
             , ul []
                 [ li []
                     [ a
@@ -69,27 +66,25 @@ view _ =
                     [ Attr.class "storm-face"
                     ]
                     [ img
-                        [ Attr.src "img/strom_face.png"
+                        [ Attr.src "nyaasets/strom_face.png"
                         , Attr.title "Cute stupid face."
                         ]
                         []
                     , p
-                        [ Attr.attribute "data-translate" "nyaa"
-                        ]
                         []
+                        [ text (translate requestedLang currentPage "nyaa") ]
                     ]
                 , div
                     [ Attr.class "storm-ball"
                     ]
                     [ img
-                        [ Attr.src "img/storm_ball.png"
+                        [ Attr.src "nyaasets/storm_ball.png"
                         , Attr.title "Cute ball animal."
                         ]
                         []
                     , p
-                        [ Attr.attribute "data-translate" "purr"
-                        ]
                         []
+                        [ text (translate requestedLang currentPage "purr") ]
                     ]
                 ]
             ]
@@ -97,9 +92,8 @@ view _ =
             [ p []
                 [ text "Pick a language. Current Language:" ]
             , p
-                [ Attr.attribute "data-translate" "current-lang"
-                ]
                 []
+                [ text (translate requestedLang currentPage "currentLang") ]
             , button
                 [ onClick ClickedChangeLanguageButton ]
                 [ text "Change Language" ]

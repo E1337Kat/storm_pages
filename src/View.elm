@@ -52,8 +52,8 @@ view model =
 renderRoute : Model navigationKey -> Html Msg
 renderRoute ({ router } as model) =
     case router.page of
-        About ->
-            map MsgForAbout (About.View.view model.about)
+        Home ->
+            map MsgForAbout (About.View.view model.currentLang router.page model.about)
 
         -- Html.h1 [] [ text "About Me" ]
         _ ->
