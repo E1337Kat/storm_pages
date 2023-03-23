@@ -10,7 +10,6 @@ module I18n.I18n exposing (translate, defaultLanguage)
 -}
 
 import I18n.About
-import I18n.Home
 import I18n.Types exposing (LanguageId, languageIdFromString, languageIdToString)
 import OpaqueDict
 import Router.Routes

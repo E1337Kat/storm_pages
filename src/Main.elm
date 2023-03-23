@@ -1,6 +1,14 @@
-module Main exposing (main)
+module Main exposing
+    ( Flags
+    , main
+    )
 
 {-| Entrypoint to the Frontend application.
+
+
+# Types
+
+@docs Flags
 
 
 # Function

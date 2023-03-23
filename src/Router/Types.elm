@@ -47,7 +47,10 @@ type alias ReturnWithEffects navigationKey =
 -}
 type Effect
     = DirectCommand (Cmd Msg)
-    | GoToPagePath String
+
+
+
+-- | GoToPagePath String
 
 
 {-| Router message events.
@@ -55,4 +58,7 @@ type Effect
 type Msg
     = UrlChanged Url
     | UrlRequested UrlRequest
-    | Go Page
+
+
+
+-- | Go Page

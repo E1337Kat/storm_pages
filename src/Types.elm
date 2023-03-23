@@ -3,7 +3,7 @@ module Types exposing
     , Msg(..)
     , ReturnWithEffects
     , Effect(..)
-    , withRouter
+    , withRouter, withAbout
     )
 
 {-| Manage the types for the overall frontend application.
@@ -19,16 +19,12 @@ module Types exposing
 
 # Helper Functions
 
-@docs withRouter
+@docs withRouter, withAbout
 
 -}
 
--- import Json.Decode as Decode
--- import Json.Encode exposing (Value)
-
 import About.Types
 import I18n.Types exposing (LanguageId)
-import KeyboardEvent.Types
 import ReturnedEffects
     exposing
         ( Effects
@@ -59,13 +55,22 @@ withRouter router model =
     { model | router = router }
 
 
+{-| Update the about.
+-}
+withAbout : About.Types.Model -> Model k -> Model k
+withAbout about model =
+    { model | about = about }
+
+
 {-| Top-level effects.
 -}
 type Effect
-    = DirectCommand (Cmd Msg)
-    | EffectFromRouter Router.Types.Effect
+    = EffectFromRouter Router.Types.Effect
     | EffectFromAbout About.Types.Effect
-    | MessageEffect Msg
+
+
+
+-- | MessageEffect Msg
 
 
 {-| Alias for return values.
@@ -77,11 +82,10 @@ type alias ReturnWithEffects navigationKey =
 {-| The messages mapping all the sub-module messages.
 -}
 type Msg
-    = CurrentTimeReceived Posix
-    | MsgForAbout About.Types.Msg
-    | MsgForKeyboardEvent KeyboardEvent.Types.Msg
+    = MsgForAbout About.Types.Msg
+      -- | MsgForKeyboardEvent
     | MsgForRouter Router.Types.Msg
     | PageVisibilityChanged Bool
-    | Tick Posix
-    | TimeZoneReceived Time.Zone
+      -- | Tick Posix
+      -- | TimeZoneReceived
     | TwentySecondsPassed

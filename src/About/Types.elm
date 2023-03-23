@@ -41,9 +41,13 @@ defaultModel =
     }
 
 
+{-| Messages the About Page can handle
+-}
 type Msg
     = ClickedChangeLanguageButton
 
 
+{-| Effects the About Page can handle
+-}
 type Effect
     = NoOp

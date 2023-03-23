@@ -1,5 +1,14 @@
 module About.View exposing (view)
 
+{-| The views for the About Me module
+
+
+# Functions
+
+@docs view
+
+-}
+
 import About.Types exposing (Model, Msg(..))
 import Html
     exposing
@@ -23,6 +32,8 @@ import I18n.Types exposing (LanguageId)
 import Router.Routes exposing (Page)
 
 
+{-| The view model for the about page.
+-}
 view : LanguageId -> Page -> Model -> Html Msg
 view requestedLang currentPage _ =
     div []
