@@ -69,7 +69,7 @@ view requestedLang currentPage _ =
                 , div
                     [ Attr.class "storm-face" ]
                     [ img
-                        [ Attr.src "nyaasets/strom_face.png"
+                        [ Attr.src "nyaasets/nyaassets--strom_face.png"
                         , Attr.title "Cute stupid face."
                         ]
                         []
@@ -79,7 +79,7 @@ view requestedLang currentPage _ =
                     [ Attr.class "storm-ball"
                     ]
                     [ img
-                        [ Attr.src "nyaasets/storm_ball.png"
+                        [ Attr.src "nyaasets/nyaassets--storm_ball.png"
                         , Attr.title "Cute ball animal."
                         ]
                         []
