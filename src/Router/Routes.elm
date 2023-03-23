@@ -1,7 +1,7 @@
 module Router.Routes exposing
     ( Page(..)
     , routes
-    , toPath
+    -- , toPath
     )
 
 {-| Route web requests to particular pages.
@@ -15,11 +15,10 @@ module Router.Routes exposing
 # Helper Functions
 
 @docs routes
-@docs toPath
 
 -}
 
-import Url.Parser exposing ((</>), (<?>), Parser, map, oneOf, s, top)
+import Url.Parser exposing (Parser, map, oneOf, s, top)
 
 
 {-| A specific page in the application.
@@ -39,13 +38,13 @@ routes =
         ]
 
 
-{-| Transform a page to a string page.
--}
-toPath : Page -> String
-toPath page =
-    case page of
-        Home ->
-            "/"
 
-        NotFound ->
-            "/404"
+-- {-| Transform a page to a string page.
+-- -}
+-- toPath : Page -> String
+-- toPath page =
+--     case page of
+--         Home ->
+--             "/"
+--         NotFound ->
+--             "/404"

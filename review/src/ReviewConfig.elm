@@ -178,6 +178,7 @@ config =
         |> Review.Rule.ignoreErrorsForDirectories [ "tests/" ]
     , Simplify.rule Simplify.defaults
     , UseCamelCase.rule UseCamelCase.default
+        |> Review.Rule.ignoreErrorsForDirectories [ "src/I18n/" ]
     , NoDuplicatePorts.rule
     , NoUnusedPorts.rule
     ]

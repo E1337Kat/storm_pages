@@ -1,5 +1,5 @@
 module I18n.About exposing
-    ( AboutI18n(..), AboutKeys, AboutKey(..)
+    ( AboutKeys, AboutKey(..)
     , aboutKeyFromString, translations
     )
 
@@ -8,7 +8,7 @@ module I18n.About exposing
 
 # Types
 
-@docs AboutI18n, AboutKeys, AboutKey
+@docs AboutKeys, AboutKey
 
 
 # Functions
@@ -31,7 +31,6 @@ type AboutKey
     | Nyaa String
     | Purr String
     | CurrentLang String
-    | Missing String
 
 
 {-| The set of keys used
@@ -48,12 +47,8 @@ type alias AboutKeys =
     }
 
 
-{-| What actually hold all the transaltions
+{-| Get the key's actual text.
 -}
-type AboutI18n
-    = OpaqueDict LanguageId AboutKeys
-
-
 asString : AboutKey -> String
 asString key =
     case key of
@@ -78,10 +73,9 @@ asString key =
         CurrentLang t ->
             t
 
-        _ ->
-            "Translation Missing"
 
-
+{-| get an about key from a string..
+-}
 aboutKeyFromString : String -> AboutKeys -> String
 aboutKeyFromString string transSet =
     case string of
@@ -121,6 +115,8 @@ translations =
         ]
 
 
+{-| Translations for language key `ca`.
+-}
 ca : AboutKeys
 ca =
     { langId = LanguageId "ca"
@@ -134,6 +130,8 @@ ca =
     }
 
 
+{-| Translations for language key `en`.
+-}
 en : AboutKeys
 en =
     { langId = LanguageId "en"
@@ -147,6 +145,8 @@ en =
     }
 
 
+{-| Translations for language key `jp`.
+-}
 jp : AboutKeys
 jp =
     { langId = LanguageId "jp"

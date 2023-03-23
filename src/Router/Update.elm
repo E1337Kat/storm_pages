@@ -19,13 +19,11 @@ module Router.Update exposing
 
 -}
 
--- import Router.Routes exposing (Page(..), routes, toPath)
-
 import Browser exposing (UrlRequest(..))
-import Browser.Navigation exposing (Key, load, pushUrl)
+import Browser.Navigation exposing (Key, load)
 import ReturnedEffects exposing (build, none, singleton)
 import Router.RemoteApi exposing (loadUrlInNewTab)
-import Router.Routes exposing (Page(..), routes, toPath)
+import Router.Routes exposing (Page(..), routes)
 import Router.Types exposing (Effect(..), Model, Msg(..), ReturnWithEffects)
 import Url exposing (Url)
 import Url.Parser exposing (parse)
@@ -65,18 +63,22 @@ update msg model =
                     ( model, loadUrlInNewTab url )
                         |> Tuple.mapSecond (DirectCommand >> build)
 
-        Go destinationPage ->
-            ( model, toPath destinationPage )
-                |> Tuple.mapSecond (GoToPagePath >> build)
+
+
+-- Go destinationPage ->
+--     ( model, toPath destinationPage )
+--         |> Tuple.mapSecond (GoToPagePath >> build)
 
 
 {-| Transform the effect into a command.
 -}
 performEffect : Key -> Effect -> Cmd Msg
-performEffect navigationKey effect =
+performEffect _ effect =
     case effect of
         DirectCommand cmd ->
             cmd
 
-        GoToPagePath thePath ->
-            pushUrl navigationKey thePath
+
+
+-- GoToPagePath thePath ->
+--     pushUrl navigationKey thePath
