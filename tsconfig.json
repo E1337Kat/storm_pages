@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2020",
+    "lib": ["dom", "ES2020"],
+    "allowJs": true,
+    "checkJs": false,
+    /* Might be needed for Elm */
+    /* "allowUmdGlobalAccess": true, */
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    /* Yet to be determined */
+    "outDir": "dist",
+    "typeRoots": ["./src/types", "./node_modules/@types"]
+  },
+  "exclude": ["node_modules", "typings", "dist"],
+  "include": [
+    "./global.d.ts",
+    "./index.d.ts",
+    "./src/**/*.ts",
+    "./src/**/*.js"
+  ],
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Recommended"
+}
