@@ -1,0 +1,118 @@
+body {
+  padding: 20px;
+  font-family: Helvetica;
+  color: #f2f2f2;
+  background-color: #3a3a3a;
+}
+
+.main-content {
+  float: left;
+  margin-left: 10%;
+  margin-right: 20%;
+}
+
+.signature {
+  text-align: left;
+  font-family: "Sofia";
+  font-size: 20px;
+  padding-bottom: 20px;
+  color: #c7b5f2;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+ul {
+  display: block;
+  margin: 10px;
+}
+
+li {
+  background-color: #f2f2f2;
+  color: #3a3a3a;
+  border-radius: 3px;
+  padding: 20px;
+  margin: 5px;
+  font-size: 14px;
+  max-width: 500px;
+}
+
+.storm-images {
+  text-align: center;
+}
+
+.storm-images img {
+  max-width: 250px;
+}
+
+.storm-face {
+  float: left;
+}
+
+.storm-ball {
+  float: right;
+}
+
+.storm-images p {
+  font-style: italic;
+}
+
+@media only screen and (max-width: 1100px) {
+  .storm-ball img {
+    max-height: 250px;
+  }
+
+  .footer {
+    position: unset;
+  }
+}
+
+@media only screen and (min-width: 1100px) {
+  .main-content {
+    float: center;
+    margin-left: 10%;
+    margin-right: 20%;
+  }
+
+  .storm-face {
+    float: left;
+  }
+
+  .storm-ball {
+    float: right;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .storm-images {
+    display: table;
+  }
+
+  .storm-images > h3 {
+    float: left;
+  }
+
+  .storm-face {
+    float: left;
+    display: contents;
+  }
+
+  .storm-ball {
+    float: left;
+    display: contents;
+  }
+
+  .storm-ball img {
+    max-height: 250px;
+  }
+
+  .footer {
+    position: unset;
+  }
+}
