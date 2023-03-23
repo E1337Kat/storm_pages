@@ -41,13 +41,5 @@ translate lang page trans =
             Maybe.map (I18n.About.aboutKeyFromString trans) transSet
                 |> Maybe.withDefault missingTranslation
 
-        -- Router.Routes.Home ->
-        --     let
-        --         transSet : Maybe I18n.Home.HomeKeys
-        --         transSet =
-        --             OpaqueDict.get lang I18n.Home.translations
-        --     in
-        --     Maybe.map (I18n.Home.homeKeyFromString trans) transSet
-        --         |> Maybe.withDefault missingTranslation
         _ ->
             missingTranslation

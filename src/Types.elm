@@ -69,10 +69,6 @@ type Effect
     | EffectFromAbout About.Types.Effect
 
 
-
--- | MessageEffect Msg
-
-
 {-| Alias for return values.
 -}
 type alias ReturnWithEffects navigationKey =
@@ -83,9 +79,6 @@ type alias ReturnWithEffects navigationKey =
 -}
 type Msg
     = MsgForAbout About.Types.Msg
-      -- | MsgForKeyboardEvent
     | MsgForRouter Router.Types.Msg
     | PageVisibilityChanged Bool
-      -- | Tick Posix
-      -- | TimeZoneReceived
     | TwentySecondsPassed

@@ -21,11 +21,6 @@ module Update exposing
 
 -}
 
--- import Task
--- import Browser.Events exposing (onKeyDown)
--- import KeyboardEvent.Types exposing (Msg(..), keyDecoder)
--- import Task
-
 import About.Types
 import About.Update
 import Browser.Navigation exposing (Key)
@@ -36,11 +31,9 @@ import ReturnedEffects
         ( Effects
         , addEffect
         , andMapEffect
-          -- , build
         , foldl
         , listMap
         , map
-          -- , none
         , singleton
         )
 import Router.RemoteApi exposing (receivePageVisibility)
@@ -65,11 +58,6 @@ init url key =
     singleton (Model key Nothing defaultLanguage True (Just ""))
         |> andMapEffect EffectFromRouter (Router.Update.init url key)
         |> andMapEffect EffectFromAbout About.Update.init
-        -- |> addEffect
-        --     (Task.perform TimeZoneReceived Time.here
-        --         |> DirectCommand
-        --         |> build
-        --     )
         |> maybeActOnInitialState
 
 
@@ -96,7 +84,6 @@ update uberMessage model =
     in
     return
         |> returnMapper
-        -- |> translate uberMessage
         |> maybeActOnUpdatedState uberMessage
 
 
@@ -119,27 +106,11 @@ mapEffectAndModel effectMapper modelMutator ( subModel, subEffects ) return =
 performEffect : Key -> Effect -> Cmd Msg
 performEffect navigationKey effect =
     case effect of
-        -- DirectCommand cmd ->
-        --     cmd
-        -- MessageEffect msg ->
-        --     msg |> msgToCmd
         EffectFromAbout subEffect ->
             About.Update.performEffect subEffect |> Cmd.map MsgForAbout
 
         EffectFromRouter subEffect ->
             Router.Update.performEffect navigationKey subEffect |> Cmd.map MsgForRouter
-
-
-
--- {-| Convert a message into a command.
---     -- Basically syntactic sugar for
---         Task.succeed |> Task.perform identity
--- -}
--- msgToCmd : msg -> Cmd msg
--- msgToCmd message =
---     message
---         |> Task.succeed
---         |> Task.perform identity
 
 
 {-| Subscribe to messages.
@@ -148,9 +119,6 @@ subscriptions : Model navigationKey -> Sub Msg
 subscriptions _ =
     Sub.batch
         [ every 20000 (always Types.TwentySecondsPassed)
-
-        -- , onKeyDown keyDecoder
-        --     |> Sub.map MsgForKeyboardEvent
         , receivePageVisibility PageVisibilityChanged
         ]
 
@@ -187,12 +155,6 @@ maybeActOnInitialState return =
 maybeActOnUpdatedState : Msg -> ( Model navigationKey, Effects Effect ) -> ReturnWithEffects navigationKey
 maybeActOnUpdatedState originalMsg (( model, _ ) as return) =
     case originalMsg of
-        -- Types.CurrentTimeReceived currentTime ->
-        --     ( { model
-        --         | currentTime = Just currentTime
-        --       }
-        --     , msg
-        --     )
         MsgForAbout About.Types.ClickedChangeLanguageButton ->
             let
                 nextLang : LanguageId
@@ -213,8 +175,6 @@ maybeActOnUpdatedState originalMsg (( model, _ ) as return) =
             return
                 |> map (\m -> { m | currentLang = nextLang })
 
-        -- return
-        --     |> map (\m -> { m | currentLang = nextLang })
         -- All we care about for page requests are route changes, so will act only when the original message is for the router and the URL actually changed.
         MsgForRouter (Router.Types.UrlChanged _) ->
             maybeActOnPageRequest return
@@ -225,24 +185,3 @@ maybeActOnUpdatedState originalMsg (( model, _ ) as return) =
 
         _ ->
             return
-
-
-
--- {-| Translate a message to its specific sub-module.
--- -}
--- translate : Msg -> ( Model navigationKey, Effects Effect ) -> ReturnWithEffects navigationKey
--- translate msg ( model, commands ) =
---     let
---         newEffects : Effects Effect
---         newEffects =
---             case msg of
---                 Tick currentTime ->
---                     [ Types.CurrentTimeReceived currentTime
---                     ]
---                         |> List.map (MessageEffect >> build)
---                         |> foldl
---                 _ ->
---                     none
---     in
---     ( model, commands )
---         |> addEffect newEffects

@@ -64,12 +64,6 @@ update msg model =
                         |> Tuple.mapSecond (DirectCommand >> build)
 
 
-
--- Go destinationPage ->
---     ( model, toPath destinationPage )
---         |> Tuple.mapSecond (GoToPagePath >> build)
-
-
 {-| Transform the effect into a command.
 -}
 performEffect : Key -> Effect -> Cmd Msg
@@ -77,8 +71,3 @@ performEffect _ effect =
     case effect of
         DirectCommand cmd ->
             cmd
-
-
-
--- GoToPagePath thePath ->
---     pushUrl navigationKey thePath
