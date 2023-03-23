@@ -27,6 +27,7 @@ module Types exposing
 -- import Json.Encode exposing (Value)
 
 import About.Types
+import I18n.Types exposing (LanguageId)
 import KeyboardEvent.Types
 import ReturnedEffects
     exposing
@@ -43,8 +44,7 @@ WARNING: The order here must match that of the main init and update functions!
 type alias Model navigationKey =
     { key : navigationKey
     , currentTime : Maybe Posix
-
-    -- , uuidWithSeeds : UUIDWithSeeds
+    , currentLang : LanguageId
     , pageVisible : Bool
     , siteTitle : Maybe String
     , router : Router.Types.Model navigationKey

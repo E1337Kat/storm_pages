@@ -27,7 +27,6 @@ import Url.Parser exposing ((</>), (<?>), Parser, map, oneOf, s, top)
 type Page
     = Home
     | NotFound
-    | About
 
 
 {-| Map a request to a page.
@@ -37,7 +36,6 @@ routes =
     oneOf
         [ map Home top
         , map NotFound (s "404")
-        , map About (s "about")
         ]
 
 
@@ -51,6 +49,3 @@ toPath page =
 
         NotFound ->
             "/404"
-
-        About ->
-            "/about"
