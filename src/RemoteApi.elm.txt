@@ -1,0 +1,290 @@
+-- {-| An authenticated GraphQL request effect.
+-- a: The constructor of the message that the result value will take.
+-- msg: The message type
+-- -}
+-- type alias AuthenticatedGraphQLEffect a msg =
+--     ( RemoteData (Graphql.Http.Error a) a -> msg, SelectionSet a RootQuery )
+-- {-| An authenticated GraphQL mutation effect.
+-- a: The constructor of the message that the result value will take.
+-- msg: The message type
+-- -}
+-- type alias AuthenticatedGraphQLMutationEffect a msg =
+--     ( RemoteData (Graphql.Http.Error a) a -> msg, SelectionSet a RootMutation )
+-- {-| Common headers
+-- -}
+-- standardHeaders : List Header
+-- standardHeaders =
+--     [ header "Content-Type" "application/vnd.api+json"
+--     , header "Frontend-App-Version" "video-app-01"
+--     ]
+-- {-| The HTTP effect wrapper for programmatic access to building the HTTP options.
+-- -}
+-- type HttpEffect a msg
+--     = HttpEffect (EffectOptions a msg)
+-- {-| The options themselves.
+-- -}
+-- type alias EffectOptions a msg =
+--     { url : Maybe String
+--     , expect : Maybe (HttpRequestExpectation a msg)
+--     , mode : Maybe HttpRequestMode
+--     , resultHandler : Maybe (HttpResultHandler a msg)
+--     , jsonDecoder : Maybe (Decoder a)
+--     , body : Maybe ( RequestMimeType, RequestEncodedBody )
+--     }
+-- {-| Get the default effect options.
+-- -}
+-- defaultHttpEffectOptions : EffectOptions a msg
+-- defaultHttpEffectOptions =
+--     { url = Nothing
+--     , expect = Nothing
+--     , mode = Nothing
+--     , resultHandler = Nothing
+--     , jsonDecoder = Nothing
+--     , body = Nothing
+--     }
+-- {-| Make a GET request effect.
+-- -}
+-- getRequestEffect : String -> HttpEffect a msg
+-- getRequestEffect url =
+--     HttpEffect { defaultHttpEffectOptions | url = Just url, mode = Just GetRequestMode }
+-- {-| Make a PATCH request effect.
+-- -}
+-- patchRequestEffect : String -> HttpEffect a msg
+-- patchRequestEffect url =
+--     HttpEffect { defaultHttpEffectOptions | url = Just url, mode = Just PatchRequestMode }
+-- {-| Make a POST request effect.
+-- -}
+-- postRequestEffect : String -> HttpEffect a msg
+-- postRequestEffect url =
+--     HttpEffect { defaultHttpEffectOptions | url = Just url, mode = Just PostRequestMode }
+-- {-| Make a DELETE request effect.
+-- -}
+-- deleteRequestEffect : String -> HttpEffect a msg
+-- deleteRequestEffect url =
+--     HttpEffect { defaultHttpEffectOptions | url = Just url, mode = Just DeleteRequestMode }
+-- {-| Set a result handler for an HTTP effect with an expected string time.
+-- -}
+-- withStringResultHandler : (Result Http.Error String -> msg) -> HttpEffect a msg -> HttpEffect a msg
+-- withStringResultHandler handler (HttpEffect options) =
+--     HttpEffect { options | resultHandler = Just (StringResultHandler handler) }
+-- {-| Set a result handler for an HTTP effect with no expected type of result.
+-- -}
+-- withWhateverResultHandler : (Result Http.Error () -> msg) -> HttpEffect a msg -> HttpEffect a msg
+-- withWhateverResultHandler handler (HttpEffect options) =
+--     HttpEffect { options | resultHandler = Just (WhateverResultHandler handler) }
+-- {-| Set a result handler for an HTTP effect with a typed result.
+-- -}
+-- withTypedResultHandler : (Result Http.Error a -> msg) -> HttpEffect a msg -> HttpEffect a msg
+-- withTypedResultHandler handler (HttpEffect options) =
+--     HttpEffect { options | resultHandler = Just (TypedResultHandler handler) }
+-- {-| Set a JSON decoder for the HTTP effect.
+-- -}
+-- withJsonDecoder : Decoder a -> HttpEffect a msg -> HttpEffect a msg
+-- withJsonDecoder decoder (HttpEffect options) =
+--     HttpEffect { options | jsonDecoder = Just decoder }
+-- {-| Set the MIME type and encoded body.
+-- -}
+-- withBody : ( RequestMimeType, RequestEncodedBody ) -> HttpEffect a msg -> HttpEffect a msg
+-- withBody body (HttpEffect options) =
+--     HttpEffect { options | body = Just body }
+-- {-| Encode a value for the body of a request.
+-- -}
+-- encodeRequestBody : Encode.Value -> RequestEncodedBody
+-- encodeRequestBody value =
+--     Encode.encode 0 value
+--         |> RequestEncodedBody
+-- {-| Make an HTTP effect from the options.
+-- -}
+-- effect : HttpEffect a msg -> HttpRequestEffect a msg
+-- effect (HttpEffect { url, mode, resultHandler, jsonDecoder, body }) =
+--     let
+--         fullRequest :
+--             HttpRequestMode
+--             -> String
+--             -> HttpRequestEffect a msg
+--         fullRequest theMode theUrl =
+--             { url = theUrl
+--             , expect = { resultHandler = resultHandler, jsonDecoder = jsonDecoder }
+--             , mode = theMode
+--             , body = body
+--             }
+--         nullRequest : HttpRequestEffect a msg
+--         nullRequest =
+--             { url = ""
+--             , expect = { resultHandler = Nothing, jsonDecoder = Nothing }
+--             , mode = NullRequestMode
+--             , body = Nothing
+--             }
+--     in
+--     Maybe.map2 fullRequest mode url
+--         |> withDefault nullRequest
+-- {-| Command the actual request from the effect.
+-- -}
+-- command : HttpRequestEffect a msg -> Cmd msg
+-- command { url, expect, mode, body } =
+--     let
+--         requestBody : Http.Body
+--         requestBody =
+--             case body |> withDefault ( ApplicationJsonMimeType, EmptyRequestBody ) of
+--                 ( _, EmptyRequestBody ) ->
+--                     Http.emptyBody
+--                 ( ApplicationJsonMimeType, RequestEncodedBody encodedBody ) ->
+--                     Http.stringBody "application/json" encodedBody
+--                 ( JsonApiMimeType, RequestEncodedBody encodedBody ) ->
+--                     Http.stringBody "application/vnd.api+json" encodedBody
+--         deleter : Expect msg -> Cmd msg
+--         deleter expectation =
+--             Http.request
+--                 { method = "DELETE"
+--                 , headers = standardHeaders
+--                 , url = url
+--                 , body = Http.emptyBody
+--                 , expect = expectation
+--                 , timeout = Nothing
+--                 , tracker = Nothing
+--                 }
+--         getter : Expect msg -> Cmd msg
+--         getter expectation =
+--             Http.request
+--                 { method = "GET"
+--                 , headers = standardHeaders
+--                 , url = url
+--                 , body = Http.emptyBody
+--                 , expect = expectation
+--                 , timeout = Nothing
+--                 , tracker = Nothing
+--                 }
+--         patcher : Expect msg -> Cmd msg
+--         patcher expectation =
+--             Http.request
+--                 { method = "PATCH"
+--                 , headers = standardHeaders
+--                 , url = url
+--                 , body = requestBody
+--                 , expect = expectation
+--                 , timeout = Nothing
+--                 , tracker = Nothing
+--                 }
+--         poster : Expect msg -> Cmd msg
+--         poster expectation =
+--             Http.request
+--                 { method = "POST"
+--                 , headers = standardHeaders
+--                 , url = url
+--                 , body = requestBody
+--                 , expect = expectation
+--                 , timeout = Nothing
+--                 , tracker = Nothing
+--                 }
+--         nuller : Expect msg -> Cmd msg
+--         nuller _ =
+--             Cmd.none
+--         bothHandlerAndDecoder : HttpResultHandler a msg -> Decoder a -> Cmd msg
+--         bothHandlerAndDecoder handler decoder =
+--             let
+--                 expectation : Expect msg
+--                 expectation =
+--                     case handler of
+--                         WhateverResultHandler callback ->
+--                             Http.expectWhatever callback
+--                         TypedResultHandler callback ->
+--                             expectJson callback decoder
+--                         StringResultHandler callback ->
+--                             Http.expectString callback
+--             in
+--             pickMode expectation
+--         justHandler : HttpResultHandler a msg -> Cmd msg
+--         justHandler handler =
+--             let
+--                 expectation : Expect msg
+--                 expectation =
+--                     case handler of
+--                         WhateverResultHandler callback ->
+--                             Http.expectWhatever callback
+--                         TypedResultHandler callback ->
+--                             expectJson callback (Decode.fail "No decoder available")
+--                         StringResultHandler callback ->
+--                             Http.expectString callback
+--             in
+--             pickMode expectation
+--         pickMode : Expect msg -> Cmd msg
+--         pickMode expectation =
+--             case mode of
+--                 DeleteRequestMode ->
+--                     deleter expectation
+--                 GetRequestMode ->
+--                     getter expectation
+--                 PatchRequestMode ->
+--                     patcher expectation
+--                 PostRequestMode ->
+--                     poster expectation
+--                 _ ->
+--                     nuller expectation
+--     in
+--     Maybe.map2 bothHandlerAndDecoder expect.resultHandler expect.jsonDecoder
+--         |> orElse (Maybe.map justHandler expect.resultHandler)
+--         |> withDefault Cmd.none
+-- {-| The raw, un-decoded JSON
+-- -}
+-- type RawJsonResult
+--     = RawJsonResult String
+-- {-| Whether the HTTP request effect is for a PATCH request.
+-- -}
+-- isPatchRequest : HttpRequestEffect a msg -> Bool
+-- isPatchRequest { mode } =
+--     case mode of
+--         PatchRequestMode ->
+--             True
+--         _ ->
+--             False
+-- {-| Whether the HTTP request effect is for a POST request.
+-- -}
+-- isPostRequest : HttpRequestEffect a msg -> Bool
+-- isPostRequest { mode } =
+--     case mode of
+--         PostRequestMode ->
+--             True
+--         _ ->
+--             False
+-- {-| The MIME type of the request.
+-- -}
+-- type RequestMimeType
+--     = ApplicationJsonMimeType
+--     | JsonApiMimeType
+-- {-| The request body, encoded.
+-- -}
+-- type RequestEncodedBody
+--     = RequestEncodedBody String
+--     | EmptyRequestBody
+-- {-| Http request mode.
+-- -}
+-- type HttpRequestMode
+--     = DeleteRequestMode
+--     | PatchRequestMode
+--     | PostRequestMode
+--     | GetRequestMode
+--     | NullRequestMode
+-- {-| The kind of result handler.
+-- -}
+-- type HttpResultHandler a msg
+--     = WhateverResultHandler (Result Http.Error () -> msg)
+--     | WeCounselJsonResultHandler (WeCounselJsonResult -> msg)
+--     | TypedResultHandler (Result Http.Error a -> msg)
+--     | StringResultHandler (Result Http.Error String -> msg)
+-- {-| Create an expectation with possible decoders.
+-- -}
+-- type alias HttpRequestExpectation a msg =
+--     { resultHandler : Maybe (HttpResultHandler a msg)
+--     , jsonDecoder : Maybe (Decoder a)
+--     }
+-- {-| An record for an effect that involves an HTTP request.
+-- -}
+-- type alias HttpRequestEffect a msg =
+--     { url : String
+--     , expect : HttpRequestExpectation a msg
+--     , mode : HttpRequestMode
+--     , body : Maybe ( RequestMimeType, RequestEncodedBody )
+--     }
+
+
+module Main exposing (..)
